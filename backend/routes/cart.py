@@ -4,19 +4,19 @@ from ..database import cart_collection
 
 router = APIRouter(prefix = "/cart", tags = ["Cart"])
 
-router.post("/add")
+@router.post("/add")
 def add_to_cart(item : CartItem):
-    item_data = item.model_dump
+    item_data = item.model_dump()
     cart_collection.insert_one(item_data)
     return {"message" : "Item added to cart"}
 
 
-router.get("/{user_email}")
+@router.get("/{user_email}")
 def get_cart(user_email : str):
     items = list(cart_collection.find({"user_email" : user_email}, {"_id" : 0}))
     return items
 
-router.delete("/{user_email}")
+@router.delete("/{user_email}")
 def clear_cart(user_email : str):
     cart_collection.delete_many({"user_email" : user_email})
     return {"message" : "Cart cleared successfully!"}

@@ -31,7 +31,7 @@ app.include_router(orders.router)
 app.mount("/uploads", StaticFiles(directory = 'uploads'), name = 'uploads')
 
 # Serve the frontend natively
-app.pount("/", StaticFiles(directory = "Frontend", html = True), name = "frontend")
+app.mount("/", StaticFiles(directory = "Frontend", html = True), name = "frontend")
 
 
 if __name__ == "__main__":

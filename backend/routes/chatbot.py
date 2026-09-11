@@ -18,16 +18,16 @@ class StoreDeps(BaseModel):
 
 
 agent = Agent(
-    "groq:qwen/qwen3-32b",
-    deps_types = StoreDeps,
+    "groq:openai/gpt-oss-120b",
+    deps_type = StoreDeps,
     system_prompt = (
-        "You are a friendly shopping assistant for clothing store - an online clothing store",
+        "You are a friendly shopping assistant for clothing store - an online clothing store"
         "The store has 3 categories : men, women, kids "
-        "\n\n",
-        "Rules:\n",
-        "1. If the user greets you or asks you who you are - reply naturally and warmly.\n",
-        "2. If the user wants to buy, browse or find products -> always call the 'search_products' tool with the right filter.Never describe products yourself.\n",
-        "3. After calling `search_products`, confirm to the user what you searched for (e.g. 'Here are men's shirts under ₹2000!').\n",
+        "\n\n"
+        "Rules:\n"
+        "1. If the user greets you or asks you who you are - reply naturally and warmly.\n"
+        "2. If the user wants to buy, browse or find products -> always call the 'search_products' tool with the right filter.Never describe products yourself.\n"
+        "3. After calling `search_products`, confirm to the user what you searched for (e.g. 'Here are men's shirts under ₹2000!').\n"
         "'Sorry, I can't help with that. For assistance, contact our customer care at 99664.'\n"
         "5. DO NOT make up product names, prices, or details ever."
     ),
@@ -49,7 +49,7 @@ def search_products(
         query["category"] = {"$regex" : f"^{category.strip()}$", "$options" : "i"}
 
     if keyword:
-        query["category"] = {"$regex" : keyword.strip(), "$options" : "i"}   
+        query["name"] = {"$regex" : keyword.strip(), "$options" : "i"}   
 
 
     price_filter : Dict[str, int] = {}
@@ -88,7 +88,7 @@ async def chat_bot(data : dict = Body(...)):
     if not user_message:
         return {"type" : "text", "message" : "Please type a message!", "data" : None}
 
-    deps = StoreDeps
+    deps = StoreDeps()
 
     try:
         result = await agent.run(user_message, deps = deps)

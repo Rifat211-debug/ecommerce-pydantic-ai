@@ -41,7 +41,7 @@ async def add_product(
 @router.get("")
 def get_products(category : str = "", min_price : int = None, max_price : int = None):
     products = []
-    query = {"category" : {"$regex" : f"^{category}&", "options" : "i"}} if category else {}
+    query = {"category" : {"$regex" : f"^{category}$", "$options" : "i"}} if category else {}
 
     if min_price is not None or max_price is not None:
         price_query = {}
@@ -65,17 +65,17 @@ def get_products(category : str = "", min_price : int = None, max_price : int = 
         if "reviews" not in product:
             product["reviews"] = 0 
 
-          # If the product already has a plain image URL, use it directly
+
         if "image" in product and product["image"] and not isinstance(product["image"], str) is False:
             if product["image"].startswith("http"):
-                pass  # Already a valid URL, keep it as-is
+                pass  
             elif "image_data" in product and "image_content_type" in product:
-                # Convert base64 image to data URL for frontend display
+               
                 product["image"] = (
                     f"data:{product['image_content_type']};base64,{product['image_data']}"
                 )
         elif "image_data" in product and "image_content_type" in product:
-            # Convert base64 image to data URL for frontend display
+            
             product["image"] = (
                 f"data:{product['image_content_type']};base64,{product['image_data']}"
             )

@@ -4,7 +4,7 @@ from ..database import orders_collection
 
 router = APIRouter(prefix = "/order", tags = ["Order"])
 
-router.post("")
+@router.post("")
 def place_order(order : Order):
     order_data = order.model_dump()
     orders_collection.insert_one(order_data)
